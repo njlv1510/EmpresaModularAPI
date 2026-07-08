@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EmpresaModularAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2b10848b21d72a8000b502deb024b447e377dfcc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1cf05b0e64b2dc8e51f3acf005bb8b1c29066b1f")]
 [assembly: System.Reflection.AssemblyProductAttribute("EmpresaModularAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EmpresaModularAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
