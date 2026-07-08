@@ -1,0 +1,88 @@
+-- 1. CREACIÓN DE LA BASE DE DATOS
+CREATE DATABASE EmpresaModularDB;
+GO
+
+
+USE EmpresaModularDB;
+GO
+
+DELETE FROM Ventas;
+DELETE FROM Productos;
+DELETE FROM Clientes;
+DELETE FROM Categorias;
+
+DBCC CHECKIDENT ('Ventas', RESEED, 0);
+DBCC CHECKIDENT ('Productos', RESEED, 0);
+DBCC CHECKIDENT ('Clientes', RESEED, 0);
+DBCC CHECKIDENT ('Categorias', RESEED, 0);
+
+-- 2. TABLA: CATEGORIA (Entidad Maestra)
+CREATE TABLE Categorias (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre VARCHAR(100) NOT NULL,
+    Descripcion VARCHAR(255) NULL
+);
+GO
+
+-- 3. TABLA: PRODUCTO (Relacionada con Categorias)
+CREATE TABLE Productos (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre VARCHAR(150) NOT NULL,
+    Codigo VARCHAR(50) NOT NULL UNIQUE,
+    Precio DECIMAL(18,2) NOT NULL,
+    Stock INT NOT NULL,
+    CategoriaId INT NOT NULL,
+    CONSTRAINT FK_Productos_Categorias FOREIGN KEY (CategoriaId) 
+        REFERENCES Categorias(Id) ON DELETE CASCADE
+);
+GO
+
+-- 4. TABLA: CLIENTE
+CREATE TABLE Clientes (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Identificacion VARCHAR(20) NOT NULL UNIQUE, -- Cédula o RUC
+    Nombre VARCHAR(150) NOT NULL,
+    Correo VARCHAR(100) NULL,
+    Telefono VARCHAR(20) NULL
+);
+GO
+
+-- 5. TABLA: VENTA (Relacionada con Clientes y Productos)
+CREATE TABLE Ventas (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Fecha DATETIME NOT NULL DEFAULT GETDATE(),
+    ClienteId INT NOT NULL,
+    ProductoId INT NOT NULL,
+    Cantidad INT NOT NULL,
+    Total DECIMAL(18,2) NOT NULL,
+    CONSTRAINT FK_Ventas_Clientes FOREIGN KEY (ClienteId) 
+        REFERENCES Clientes(Id) ON DELETE CASCADE,
+    CONSTRAINT FK_Ventas_Productos FOREIGN KEY (ProductoId) 
+        REFERENCES Productos(Id) ON DELETE CASCADE
+);
+GO
+
+-- INSERTAR DATOS DE PRUEBA (DATA SEEDING)
+
+-- Insertar Categorías
+INSERT INTO Categorias (Nombre, Descripcion) VALUES 
+('Tecnología', 'Dispositivos electrónicos y accesorios'),
+('Oficina', 'Suministros y papelería para empresas');
+
+-- Insertar Productos
+INSERT INTO Productos (Nombre, Codigo, Precio, Stock, CategoriaId) VALUES 
+('Mouse Inalámbrico Logitech', 'PROD001', 25.50, 50, 1),
+('Teclado Mecánico RGB', 'PROD002', 65.00, 30, 1),
+('Cuaderno Universitario A4', 'PROD003', 3.20, 100, 2);
+
+-- Insertar Clientes
+INSERT INTO Clientes (Identificacion, Nombre, Correo, Telefono) VALUES 
+('0987654321', 'Juan Pérez', 'juan.perez@mail.com', '0999999999'),
+('0912345678', 'María Rodriguez', 'maria.rod@mail.com', '0988888888');
+
+-- Insertar una Venta inicial
+INSERT INTO Ventas (ClienteId, ProductoId, Cantidad, Total) VALUES 
+(1, 1, 2, 51.00); -- Juan Pérez compra 2 Mouses Inalámbricos (25.50 * 2)
+GO
+
+SELECT * FROM Categorias;
